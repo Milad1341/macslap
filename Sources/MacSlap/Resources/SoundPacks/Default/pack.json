@@ -1,0 +1,6 @@
+{
+    "name": "Default",
+    "description": "The classic MacSlap experience",
+    "mode": "random",
+    "files": ["slap1.mp3", "slap2.mp3", "slap3.mp3", "slap4.mp3", "slap5.mp3", "slap6.mp3"]
+}
