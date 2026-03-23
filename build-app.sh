@@ -24,9 +24,10 @@ mkdir -p "$RESOURCES"
 # Copy binary
 cp "$BUILD_DIR/$APP_NAME" "$MACOS/$APP_NAME"
 
-# Copy bundled resources (SPM puts them next to the binary)
+# Copy bundled resources
+# Bundle.module looks at Bundle.main.bundleURL which is the .app root
 if [ -d "$BUILD_DIR/${APP_NAME}_${APP_NAME}.bundle" ]; then
-    cp -R "$BUILD_DIR/${APP_NAME}_${APP_NAME}.bundle" "$MACOS/"
+    cp -R "$BUILD_DIR/${APP_NAME}_${APP_NAME}.bundle" "$APP_DIR/"
 fi
 
 # Create Info.plist
@@ -85,9 +86,16 @@ if [ -f "$LOGO" ]; then
     rm -rf "$ICONSET_DIR"
 fi
 
-# Ad-hoc sign (needed for macOS to run it without Gatekeeper complaints on same machine)
+# Ad-hoc code sign — sign nested bundles first, then the app itself
 echo "Signing app bundle..."
-codesign --force --deep --sign - "$APP_DIR" 2>/dev/null || echo "Warning: codesign failed, app may need manual approval"
+find "$APP_DIR" -name "*.bundle" -exec codesign --force --sign - {} \; 2>/dev/null || true
+codesign --force --sign - "$MACOS/$APP_NAME" 2>/dev/null || true
+codesign --force --sign - "$APP_DIR" 2>/dev/null || echo "Warning: codesign failed, app may need manual approval"
+
+# Create distributable zip (ditto preserves signatures and resource forks)
+echo "Creating distributable zip..."
+rm -f "$APP_NAME.zip"
+ditto -c -k --keepParent "$APP_DIR" "$APP_NAME.zip"
 
 echo ""
 echo "============================================"
@@ -95,11 +103,11 @@ echo "  MacSlap.app built successfully!"
 echo "============================================"
 echo ""
 echo "  Location: $(pwd)/$APP_DIR"
+echo "  Zip:      $(pwd)/$APP_NAME.zip"
 echo ""
 echo "  To run:   open $APP_DIR"
-echo "  To share: zip the $APP_DIR folder"
 echo ""
-echo "  Note: Recipients may need to right-click"
-echo "  and choose 'Open' the first time, since"
-echo "  the app is not notarized."
+echo "  To share the zip, recipients should run:"
+echo "    xattr -cr MacSlap.app"
+echo "  after unzipping, then open normally."
 echo "============================================"

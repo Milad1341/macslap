@@ -1,8 +1,8 @@
-# SlapMac 👋
+# MacSlap
 
 Slap your MacBook. It reacts.
 
-SlapMac is a free, open-source macOS app that detects when you slap or hit your MacBook and plays a reaction sound. That's it. No subscription. No $4.99 price tag. Just download and slap.
+MacSlap is a free, open-source macOS app that detects when you slap or hit your MacBook and plays a reaction sound. No subscription. No $4.99 price tag. Just download and slap.
 
 I built this because I kept seeing people charge money for this exact idea. So I made a better one and open-sourced it.
 
@@ -10,9 +10,9 @@ I built this because I kept seeing people charge money for this exact idea. So I
 
 ## 3 Modes
 
-- 🙋 **Girl Moan** — your Mac has feelings now
-- 🇬🇷 **Greek Swearing** — it curses back at you in Greek
-- 🇮🇷 **Iranian Swearing** — Farsi fury, no translation needed
+- **Girl Moan** — your Mac has feelings now
+- **Greek Swearing** — it curses back at you in Greek
+- **Iranian Swearing** — Farsi fury, no translation needed
 
 Switch between modes anytime. Use responsibly. Or don't.
 
@@ -20,23 +20,37 @@ Switch between modes anytime. Use responsibly. Or don't.
 
 ## Download
 
-Two options:
+Head to [Releases](https://github.com/Milad1341/macslap/releases) and download `MacSlap.zip`.
 
-**Just want the app?**
-Head to [Releases](https://github.com/Milad1341/macslap/releases) and download the `.dmg` — open it, drag to Applications, done. No Xcode, no terminal, no nonsense.
+After unzipping, **open Terminal** and run:
 
-**Want the code?**
-Clone the repo, poke around, make it worse, make it better. Do whatever you want with it.
+```bash
+xattr -cr ~/Downloads/MacSlap.app
+```
+
+Then move it to Applications and open it normally. That's it.
+
+> **Why?** macOS quarantines apps downloaded from the internet. The command above removes the quarantine flag so Gatekeeper won't block it. This is standard for open-source Mac apps that aren't on the App Store.
 
 ---
 
-## Install from source
+## Build from source
+
+Requires an **Apple Silicon Mac** (M1 or later), **macOS 13+**, and **Xcode Command Line Tools** (`xcode-select --install`).
 
 ```bash
-git clone https://github.com/Milad1341/macslap
+git clone https://github.com/Milad1341/macslap.git
 cd macslap
-npm install
-npm start
+chmod +x build-app.sh
+./build-app.sh
+open MacSlap.app
+```
+
+For a quick debug build that launches immediately:
+
+```bash
+chmod +x run.sh
+./run.sh
 ```
 
 ---

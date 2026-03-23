@@ -17,8 +17,9 @@ mkdir -p "$APP/Contents/Resources"
 cp .build/debug/MacSlap "$APP/Contents/MacOS/"
 
 # Copy resource bundle (sound packs)
+# Bundle.module looks at Bundle.main.bundleURL which is the .app root
 if [ -d ".build/debug/MacSlap_MacSlap.bundle" ]; then
-    cp -r .build/debug/MacSlap_MacSlap.bundle "$APP/Contents/Resources/"
+    cp -r .build/debug/MacSlap_MacSlap.bundle "$APP/"
 fi
 
 # Copy app icon

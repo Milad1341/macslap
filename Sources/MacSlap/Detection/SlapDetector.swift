@@ -82,6 +82,9 @@ final class SlapDetector: ObservableObject {
         guard elapsed > Double(cooldownMs) else { return }
         lastSlapTime = now
 
+        // Reset STA after detection so aftershock doesn't retrigger
+        sta = 0
+
         let event = SlapEvent(amplitude: magnitude)
         slapPublisher.send(event)
     }

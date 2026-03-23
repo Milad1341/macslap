@@ -19,14 +19,13 @@ final class AudioPlayer: ObservableObject {
             : 1.0
         player.volume = min(volume * forceMultiplier, 1.0)
 
+        // Stop any currently playing sound so they don't overlap
+        stopAll()
+
         player.prepareToPlay()
         player.play()
 
-        // Keep a reference so ARC doesn't deallocate mid-playback
         players.append(player)
-
-        // Clean up finished players
-        players.removeAll { !$0.isPlaying }
     }
 
     func playTest(url: URL) {
