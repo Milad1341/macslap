@@ -34,7 +34,7 @@ final class SoundPackManager: ObservableObject {
         var discovered: [SoundPack] = []
 
         // Load from app bundle
-        if let bundledURL = Bundle.module.url(forResource: "SoundPacks", withExtension: nil) {
+        if let bundledURL = Bundle.appResources.url(forResource: "SoundPacks", withExtension: nil) {
             discovered += discoverPacks(in: bundledURL)
         }
 

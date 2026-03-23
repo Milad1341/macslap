@@ -7,7 +7,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.setActivationPolicy(.regular)
 
         // Set the app icon to our MacSlap logo
-        if let logoURL = Bundle.module.url(forResource: "MacSlap", withExtension: "png"),
+        if let logoURL = Bundle.appResources.url(forResource: "MacSlap", withExtension: "png"),
            let logoImage = NSImage(contentsOf: logoURL) {
             NSApp.applicationIconImage = logoImage
         }

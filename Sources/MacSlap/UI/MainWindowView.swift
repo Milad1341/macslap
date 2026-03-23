@@ -155,7 +155,7 @@ struct MainWindowView: View {
     }
 
     private func loadLogo() -> NSImage? {
-        guard let url = Bundle.module.url(forResource: "MacSlap", withExtension: "png") else { return nil }
+        guard let url = Bundle.appResources.url(forResource: "MacSlap", withExtension: "png") else { return nil }
         return NSImage(contentsOf: url)
     }
 }

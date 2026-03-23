@@ -24,10 +24,9 @@ mkdir -p "$RESOURCES"
 # Copy binary
 cp "$BUILD_DIR/$APP_NAME" "$MACOS/$APP_NAME"
 
-# Copy bundled resources
-# Bundle.module looks at Bundle.main.bundleURL which is the .app root
+# Copy bundled resources into Contents/Resources
 if [ -d "$BUILD_DIR/${APP_NAME}_${APP_NAME}.bundle" ]; then
-    cp -R "$BUILD_DIR/${APP_NAME}_${APP_NAME}.bundle" "$APP_DIR/"
+    cp -R "$BUILD_DIR/${APP_NAME}_${APP_NAME}.bundle" "$RESOURCES/"
 fi
 
 # Create Info.plist
@@ -86,11 +85,14 @@ if [ -f "$LOGO" ]; then
     rm -rf "$ICONSET_DIR"
 fi
 
-# Ad-hoc code sign — sign nested bundles first, then the app itself
+# Strip extended attributes that block codesign (resource forks, Finder metadata)
+echo "Cleaning extended attributes..."
+xattr -cr "$APP_DIR"
+
+# Ad-hoc code sign
 echo "Signing app bundle..."
-find "$APP_DIR" -name "*.bundle" -exec codesign --force --sign - {} \; 2>/dev/null || true
-codesign --force --sign - "$MACOS/$APP_NAME" 2>/dev/null || true
-codesign --force --sign - "$APP_DIR" 2>/dev/null || echo "Warning: codesign failed, app may need manual approval"
+codesign --force --sign - "$MACOS/$APP_NAME" 2>&1
+codesign --force --sign - "$APP_DIR" 2>&1
 
 # Create distributable zip (ditto preserves signatures and resource forks)
 echo "Creating distributable zip..."
