@@ -74,7 +74,7 @@ final class SlapDetector: ObservableObject {
 
         guard amplitudeTriggered || ratioTriggered else { return }
         // Also require minimum amplitude to avoid phantom triggers
-        guard magnitude > 0.02 else { return }
+        guard magnitude > sensitivity else { return }
 
         // Cooldown check
         let now = Date()
